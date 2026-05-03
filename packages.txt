@@ -1,0 +1,13 @@
+Côté Node.js, les packages à installer :
+
+express → le framework pour tes API
+pg ou sequelize → pour communiquer avec PostgreSQL
+bcryptjs → pour hasher les mots de passe
+jsonwebtoken → pour les tokens JWT
+dotenv → pour les variables d'environnement
+cors → pour autoriser React à appeler ton API
+
+
+Côté React, ce qu'il te faut :
+
+react-router-dom → pour la navigation entre pages

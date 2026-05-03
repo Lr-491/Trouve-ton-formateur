@@ -1,0 +1,86 @@
+
+
+Le flux d'inscription :
+
+    Utilisateur remplit le formulaire (email, password, role)
+        ↓
+    Node.js reçoit la requête sur POST /auth/register
+            ↓
+    Tu hashs le mot de passe avec bcryptjs (jamais stocker en clair)
+            ↓
+    Tu insères dans la table users
+            ↓
+    Selon le rôle, tu crées une entrée vide dans formateurs ou institutions
+            ↓
+    Tu retournes un message de succès
+
+
+Le flux de connexion :
+
+    Utilisateur envoie email + password
+        ↓
+    Tu cherches l'utilisateur dans users par email
+            ↓
+    Tu compares le password avec bcryptjs.compare()
+            ↓
+    Si ok → tu génères un JWT token avec jsonwebtoken
+            ↓
+    Le token contient : { id, email, role }
+            ↓
+    Tu renvoies le token au front React
+            ↓
+    React stocke le token dans localStorage
+
+
+La protection des routes (middleware)
+C'est le concept clé de J3-J4. Un middleware est une fonction qui s'exécute avant ton controller pour vérifier si l'utilisateur a le droit d'accéder à la route.
+créeation de deux middlewares :
+
+    1. verifyToken → vérifie que le token JWT est valide
+    Requête arrive sur une route protégée
+            ↓
+    verifyToken extrait le token du header Authorization
+            ↓
+    Il vérifie avec jsonwebtoken.verify()
+            ↓
+    Si valide → il ajoute req.user = { id, email, role } et laisse passer
+    Si invalide → il retourne 401 Unauthorized
+
+
+    2. verifyRole → vérifie que l'utilisateur a le bon rôle
+    Après verifyToken
+            ↓
+    verifyRole vérifie que req.user.role === "admin" par exemple
+            ↓
+    Si ok → laisse passer
+    Sinon → retourne 403 Forbidden
+
+Côté React : gérer l'utilisateur connecté
+créeation d'un AuthContext qui va envelopper toute l'application. Il contient :
+
+    L'utilisateur connecté (ou null)
+    La fonction login (qui stocke le token)
+    La fonction logout (qui supprime le token)
+
+    La logique de redirection selon le rôle :
+
+        Utilisateur se connecte
+                ↓
+        React lit le rôle dans le token (tu peux décoder le JWT côté front)
+                ↓
+        role === "formateur"   → redirect vers /dashboard/formateur
+        role === "institution" → redirect vers /dashboard/institution
+        role === "admin"       → redirect vers /dashboard/admin
+
+
+Les routes protégées côté React :
+
+créeation d'un composant ProtectedRoute qui vas vérifie si l'utilisateur est connecté 
+avant d'afficher une page. Si non connecté, il redirige vers /login.
+
+⚠️ Les erreurs classiques à éviter
+
+Ne jamais stocker le mot de passe en clair dans la BDD
+Ne jamais mettre d'informations sensibles dans le JWT (mot de passe, carte bancaire...)
+Toujours mettre une expiration sur le token JWT (ex: expiresIn: "24h")
+Toujours valider les données reçues avant de les insérer en BDD

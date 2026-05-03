@@ -1,0 +1,53 @@
+server/
+├── config/
+│   ├── db.js              # connexion PostgreSQL
+│   └── migration.js       # création des tables
+├── controllers/
+│   ├── auth.controller.js
+│   ├── formateur.controller.js
+│   ├── institution.controller.js
+│   ├── offre.controller.js
+│   ├── candidature.controller.js
+│   ├── formation.controller.js
+│   ├── message.controller.js
+│   └── evaluation.controller.js
+├── middlewares/
+│   ├── auth.middleware.js  # verifyToken, verifyRole
+│   └── validate.middleware.js # validation des données
+├── routes/
+│   ├── auth.routes.js
+│   ├── formateur.routes.js
+│   ├── institution.routes.js
+│   ├── offre.routes.js
+│   ├── candidature.routes.js
+│   ├── formation.routes.js
+│   ├── message.routes.js
+│   └── evaluation.routes.js
+├── .env
+├── index.js
+└── package.json
+
+
+La logique de cette structure :
+
+config/ → tout ce qui est configuration technique
+controllers/ → la logique métier, ce que fait chaque route
+middlewares/ → les fonctions qui s'exécutent avant les controllers
+routes/ → uniquement la définition des routes, rien d'autre
+
+
+Le flux d'une requête dans cette architecture :
+
+Requête HTTP
+     ↓
+index.js  (point d'entrée)
+     ↓
+routes/   (quelle route correspond ?)
+     ↓
+middlewares/  (est-ce que l'utilisateur a le droit ?)
+     ↓
+controllers/  (exécute la logique métier)
+     ↓
+config/db.js  (communique avec PostgreSQL)
+     ↓
+Réponse HTTP

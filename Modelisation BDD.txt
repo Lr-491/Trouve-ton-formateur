@@ -1,0 +1,29 @@
+
+
+
+Logique principale :
+
+   users (id, email, password, role, created_at)
+   |
+   |-- formateurs (id, user_id, nom, prenom, competences, bio, photo, localisation, disponibilite)
+   |
+   |-- institutions (id, user_id, nom, secteur, description, localisation, site_web)
+
+
+Pourquoi séparer users et les profils ?
+
+Parce que les données d'un formateur et d'une institution sont très différentes. Si tu mets tout dans users, tu te retrouves avec une table pleine de colonnes vides selon le rôle.
+Les autres tables et leurs relations :
+
+Les autres tables et leurs relations :
+
+offres (id, institution_id, titre, description, competences_requises, localisation, statut, created_at)
+
+candidatures (id, formateur_id, offre_id, message, statut, created_at)
+→ statut : "en_attente", "acceptée", "refusée"
+
+formations (id, formateur_id, titre, description, duree, prix, niveau, created_at)
+
+messages (id, expediteur_id, destinataire_id, contenu, lu, created_at)
+
+evaluations (id, auteur_id, cible_id, note, commentaire, created_at)

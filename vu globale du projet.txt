@@ -1,0 +1,40 @@
+🗂️ Vue globale du projet
+C'est une plateforme de mise en relation entre deux types d'utilisateurs :
+
+Formateurs → proposent leurs compétences, postulent à des offres
+Institutions → publient des offres, recherchent des formateurs
+Administrateur → gère et modère la plateforme
+
+
+🧱 Les grandes parties à construire
+1. Authentification & Rôles
+C'est la base de tout. Chaque utilisateur a un rôle (formateur, institution, admin) et selon ce rôle, il voit une interface différente. Tu devras gérer ça avec JWT côté Node.js et protéger chaque route selon le rôle.
+2. Gestion des profils
+
+Formateur : compétences, expériences, CV, formations proposées
+Institution : description, secteur, localisation
+Chaque profil est public et consultable
+
+3. Recherche et filtrage
+C'est une fonctionnalité clé. Les institutions cherchent des formateurs par compétence, localisation, disponibilité, etc. Tu feras des requêtes SQL avec filtres dynamiques dans PostgreSQL.
+4. Publication d'offres & Candidatures
+Les institutions publient des offres, les formateurs y postulent. C'est un flux classique offre → candidature → accepté/refusé.
+5. Messagerie
+
+Communication entre formateur et institution. Tu peux commencer par une messagerie simple (sans temps réel) et si le temps le permet, ajouter les WebSockets avec Socket.io.
+6. Système d'évaluation
+Après une mission, les deux parties peuvent se noter mutuellement.
+7. Panel Admin
+Valider les comptes, modérer les contenus, gérer les utilisateurs.
+
+Côté API Node.js
+Tu vas organiser tes routes par domaine :
+
+/auth → inscription, connexion, token
+/users → profils
+/offres → CRUD offres
+/candidatures → postuler, accepter, refuser
+/formations → CRUD formations
+/messages → envoyer, recevoir
+/evaluations → noter
+/admin → gestion globale

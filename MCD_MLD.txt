@@ -1,0 +1,164 @@
+MCD — Modèle Conceptuel des Données
+Les entités principales
+Ce sont les "objets" du monde réel dans ton application :
+
+
+USER          FORMATEUR       INSTITUTION
+OFFRE         CANDIDATURE     FORMATION
+MESSAGE       EVALUATION
+
+
+Les relations entre entités
+C'est ici qu'on réfléchit à qui fait quoi avec qui et en quelle quantité. On utilise la notation cardinalités.
+Lire une cardinalité comme ça :
+
+FORMATEUR (1,N) --- possède --- (1,1) PROFIL_FORMATEUR
+→ Un formateur possède exactement 1 profil
+→ Un profil appartient à exactement 1 formateur
+
+Voilà toutes les relations de ton projet :
+
+USER ↔ FORMATEUR / INSTITUTION
+
+USER (1,1) ----est---- (0,1) FORMATEUR
+USER (1,1) ----est---- (0,1) INSTITUTION
+
+→ Un user est soit formateur, soit institution, soit admin
+→ Un formateur correspond à exactement 1 user
+
+INSTITUTION ↔ OFFRE
+
+INSTITUTION (1,N) ----publie---- (1,1) OFFRE
+
+→ Une institution publie plusieurs offres
+→ Une offre est publiée par une seule institution
+
+FORMATEUR ↔ OFFRE (via CANDIDATURE)
+
+FORMATEUR (1,N) ----candidate---- (1,N) OFFRE
+
+→ Un formateur peut candidater à plusieurs offres
+→ Une offre peut recevoir plusieurs candidatures
+→ Cette relation plusieurs à plusieurs crée une table intermédiaire : CANDIDATURE
+
+FORMATEUR ↔ FORMATION
+
+FORMATEUR (1,N) ----propose---- (1,1) FORMATION
+
+→ Un formateur propose plusieurs formations
+→ Une formation appartient à un seul Formateur
+
+USER ↔ MESSAGE
+
+USER (1,N) ----envoie---- (1,1) MESSAGE
+USER (1,N) ----reçoit---- (1,1) MESSAGE
+
+→ Un user envoie plusieurs messages
+→ Un user reçoit plusieurs messages
+→ La table MESSAGE aura donc un expediteur_id et un destinataire_id, tous les deux pointant vers USER
+
+USER ↔ EVALUATION
+
+USER (1,N) ----donne---- (1,1) EVALUATION
+USER (1,N) ----reçoit---- (1,1) EVALUATION
+
+→ Même logique que les messages, un auteur_id et un cible_id
+
+MLD — Modèle Logique des Données
+C'est la traduction concrète du MCD en tables. Chaque entité devient une table, chaque relation devient une clé étrangère.
+
+users
+─────────────────────────────────────────
+PK  id            SERIAL
+    email         VARCHAR(255) UNIQUE NOT NULL
+    password      VARCHAR(255) NOT NULL
+    role          ENUM('formateur', 'institution', 'admin')
+    created_at    TIMESTAMP DEFAULT NOW()
+
+
+formateurs
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  user_id       INTEGER → users(id)
+    nom           VARCHAR(100)
+    prenom        VARCHAR(100)
+    bio           TEXT
+    competences   TEXT[]  (tableau de compétences)
+    localisation  VARCHAR(100)
+    disponible    BOOLEAN DEFAULT true
+    photo         VARCHAR(255)
+
+
+institutions
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  user_id       INTEGER → users(id)
+    nom           VARCHAR(255)
+    secteur       VARCHAR(100)
+    description   TEXT
+    localisation  VARCHAR(100)
+    site_web      VARCHAR(255)
+
+
+offres
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  institution_id  INTEGER → institutions(id)
+    titre         VARCHAR(255)
+    description   TEXT
+    competences   TEXT[]
+    localisation  VARCHAR(100)
+    statut        ENUM('ouverte', 'fermée', 'pourvue')
+    created_at    TIMESTAMP DEFAULT NOW()
+
+
+candidatures
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  formateur_id  INTEGER → formateurs(id)
+FK  offre_id      INTEGER → offres(id)
+    message       TEXT
+    statut        ENUM('en_attente', 'acceptée', 'refusée')
+    created_at    TIMESTAMP DEFAULT NOW()
+
+
+formations
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  formateur_id  INTEGER → formateurs(id)
+    titre         VARCHAR(255)
+    description   TEXT
+    duree         INTEGER  (en heures)
+    prix          DECIMAL(10,2)
+    niveau        ENUM('débutant', 'intermédiaire', 'avancé')
+    created_at    TIMESTAMP DEFAULT NOW()
+
+
+messages
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  expediteur_id   INTEGER → users(id)
+FK  destinataire_id INTEGER → users(id)
+    contenu       TEXT
+    lu            BOOLEAN DEFAULT false
+    created_at    TIMESTAMP DEFAULT NOW()
+
+
+evaluations
+─────────────────────────────────────────
+PK  id            SERIAL
+FK  auteur_id     INTEGER → users(id)
+FK  cible_id      INTEGER → users(id)
+    note          INTEGER  (entre 1 et 5)
+    commentaire   TEXT
+    created_at    TIMESTAMP DEFAULT NOW()
+
+
+
+Les concepts clés à retenir
+Clé primaire (PK) → identifiant unique de chaque ligne, jamais null, jamais dupliqué
+Clé étrangère (FK) → fait le lien vers une autre table, garantit l'intégrité des données. Par exemple tu ne peux pas créer une candidature avec un formateur_id qui n'existe pas dans formateurs
+Relation plusieurs-à-plusieurs → toujours résolue par une table intermédiaire. Dans ton projet c'est candidatures qui relie formateurs et offres
+Normalisation → éviter la redondance. Tu ne stockes jamais le nom de l'institution dans la table offres, tu stockes juste son id et tu fais une jointure SQL quand tu en as besoin
+
+
