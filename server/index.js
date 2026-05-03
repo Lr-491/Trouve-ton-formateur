@@ -5,9 +5,20 @@ require('dotenv').config();
 
 const app = express();
 
+// ─── Middlewares globaux ───────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
 
+// ─── Routes ───────────────────────────────────────────────────────────────
+app.use('/api/auth', require('./routes/auth.routes'));
+// app.use('/api/formateurs', require('./routes/formateur.routes'));
+// app.use('/api/institutions', require('./routes/institution.routes'));
+// app.use('/api/offres', require('./routes/offre.routes'));
+// app.use('/api/candidatures', require('./routes/candidature.routes'));
+// app.use('/api/formations', require('./routes/formation.routes'));
+// app.use('/api/messages', require('./routes/message.routes'));
+// app.use('/api/evaluations', require('./routes/evaluation.routes'));
+// Les routes sont commentées pour l'instant, on les décommentera au fur et à mesure
 
 
 app.get('/', (req, res) =>{
