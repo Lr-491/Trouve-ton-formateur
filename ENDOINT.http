@@ -1,0 +1,32 @@
+
+
+POST http://localhost:5000/api/auth/register
+Body JSON :
+{
+  "email": "test@test.com",
+  "password": "123456",
+  "role": "formateur"
+},
+POST http://localhost:5000/api/auth/register
+Body JSON :
+{
+  "email": "test@institution.com",
+  "password": "123456",
+  "role": "institutions"
+}
+
+// Voir un profil
+GET http://localhost:5000/api/formateurs/1
+
+GET http://localhost:5000/api/auth/me
+
+// Modifier un profil (avec token dans Authorization)
+PUT http://localhost:5000/api/formateurs/1
+Body JSON :
+{
+  "nom": "Dupont",
+  "prenom": "Jean",
+  "bio": "Formateur en développement web",
+  "competences": ["React", "Node.js", "PostgreSQL"],
+  "localisation": "Paris"
+}

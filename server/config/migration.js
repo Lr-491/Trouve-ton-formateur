@@ -95,3 +95,7 @@ const createTables = async () => {
 };
 
 createTables();
+
+
+// ALTER TABLE users ADD COLUMN profil_complet BOOLEAN DEFAULT false;
+// \q

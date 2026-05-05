@@ -18,7 +18,7 @@ const register = async (req, res)  => {
         const { email, password, role } = req.body;
 
         // Vérification des champs 
-        if ( !email, !password, !role) return res.status(400).json({ message: 'Tous les champs sont obligatoires' });
+        if ( !email || !password || !role) return res.status(400).json({ message: 'Tous les champs sont obligatoires' });
 
         // Vérification du role de l'utilisateur si valide
         if (!['formateur', 'institution'].includes(role)) {
@@ -27,7 +27,7 @@ const register = async (req, res)  => {
 
         // Vérification de l'existancede l'email
         const userExiste = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (userExiste.rows.length > 1 ) {
+        if (userExiste.rows.length > 0 ) {
             return res.status(400).json({ message : "Email est déjà utilisé"});
         }
 
@@ -36,7 +36,7 @@ const register = async (req, res)  => {
 
         // Insertion du nouveau utilisateur dans la BDD
         const newUser = await pool.query(
-            'INSERT INTO users (email, password, role) VALUES $1, $2, $3 RETURNING id, email, role',
+            'INSERT INTO users (email, password, role) VALUES ($1, $2, $3) RETURNING id, email, role',
             [email, hashedPassword, role]
         );
 
@@ -86,7 +86,7 @@ const login = async (req, res)  => {
         const token = jwt.sign(
             { id: user.id, email: user.email, role: user.role },
             process.env.JWT_SECRET,
-            { expiration: '24h'}
+            { expiresIn: '24h'}
         );
 
         // Retourner le token sans le mot de passe
@@ -105,5 +105,22 @@ const login = async (req, res)  => {
     }
 }
 
+/**
+ * Récupérer l'utlisateur connecté
+ * @route GET /api/auth/me
+ */
 
-module.exports = { register,login };
+const me = async (req, res) => {
+    try {
+        res.status(200).json({
+            message: 'Token valide',
+            user: req.user
+        });
+    } catch (error) {
+        console.error('Erreur me :', error);
+        res.status(500).json({ message : "Erreur interne du serveur"});
+    }
+}
+
+
+module.exports = { register,login, me };
