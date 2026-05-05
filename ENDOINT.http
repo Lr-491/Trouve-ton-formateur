@@ -30,3 +30,25 @@ Body JSON :
   "competences": ["React", "Node.js", "PostgreSQL"],
   "localisation": "Paris"
 }
+
+
+# Offre and Candidature 
+
+// 1. Créer une offre (token institution)
+POST http://localhost:5000/api/offres
+{
+  "titre": "Formateur en développement web",
+  "description": "Nous recherchons un formateur expérimenté en React et Node.js",
+  "competences": ["React", "Node.js", "PostgreSQL"],
+  "localisation": "Brazzaville, Congo"
+}
+
+// 2. Lister les offres (public)
+GET http://localhost:5000/api/offres
+
+// 3. Postuler (token formateur)
+POST http://localhost:5000/api/candidatures
+{
+  "offre_id": 1,
+  "message": "Je suis très intéressé par cette offre, j'ai 3 ans d'expérience en React et Node.js"
+}
