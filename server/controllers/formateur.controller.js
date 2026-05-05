@@ -95,4 +95,67 @@ const updateProfil = async (req, res) => {
   }
 };
 
-module.exports = { getProfil, updateProfil };
+/**
+ * Rechercher des formateurs avec filtres
+ * @route GET /api/formateurs?competence=...&localisation=...&disponible=...
+ */
+
+const searchFormateurs = async (req, res) => {
+  try {
+    const { competence, localisation, disponible } = req.query;
+
+    // Construction dynamique de la requête
+    let query = `
+        SELECT 
+        formateurs.id,
+        formateurs.nom,
+        formateurs.prenom,
+        formateurs.bio,
+        formateurs.competences,
+        formateurs.localisation,
+        formateurs.photo,
+
+        users.email
+
+        FROM formateurs
+        JOIN users ON formateurs.user_id = users.id
+        WHERE 1=1
+    `;
+
+    // 1=1 est une astuce pour pouvoir enchaîner les AND dynamiquement
+    let params = [];
+    let index = 1;
+
+    if(competence){
+        query += ` AND $${index} = ANY(formateurs.competences)`;
+        params.push(competence)
+        index++
+    }
+
+    if (localisation) {
+        query += ` AND LOWER(formateurs.localisation) LIKE LOWER($${index})`;
+        params.push(`%${localisation}%`);
+        index++;
+    }
+
+    if (disponible !== undefined) {
+        query += ` AND formateurs.disponible = $${index}`;
+        param.push(disponible === 'true');
+        index++;
+    }
+
+    query += ` ORDER BY formateurs.id DESC`;
+
+    const result = await pool.query(query, params);
+
+    res.status(200).json({
+        total: result.rows.length,
+        formateur: result.rows
+    })
+  } catch (error) {
+    console.error('Erreur searchFormateurs :', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }  
+};
+
+module.exports = { getProfil, updateProfil, searchFormateurs };

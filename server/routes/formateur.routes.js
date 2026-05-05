@@ -12,6 +12,9 @@ const { verifyToken, verifyRole } = require('../middleware/auth.middleware.js');
 // Voir un profil formateur (public)
 router.get('/:id', formateurController.getProfil);
 
+// Recherche de formateurs (public)
+router.get('/', formateurController.searchFormateurs);
+
 // Modifier son profil (protégé)
 router.put('/:id', verifyToken, verifyRole('formateur'), formateurController.updateProfil);
 

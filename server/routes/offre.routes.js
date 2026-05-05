@@ -17,6 +17,8 @@ const { verifyToken, verifyRole } = require('../middleware/auth.middleware');
 // Routes publiques
 
 router.get('/', offreController.getAllOffres);
+// Recherche d'offres (public)
+router.get('/search', offreController.searchOffres);
 router.get('/:id', offreController.getOffre);
 
 // Routes protégeés institutions

@@ -5,6 +5,7 @@
 
 
 const pool =require('../config/db');
+const { param } = require('../routes/formateur.routes');
 
 
 /**
@@ -196,5 +197,64 @@ const deleteOffre = async (req, res) => {
     }
 };
 
+/**
+ * Rechercher des offres avec filtres
+ * @route GET /api/offres/search?competence=...&localisation=...&statut=...
+ */
 
-module.exports = { createOffre, getAllOffres, getOffre, updateOffre, deleteOffre}
+const searchOffres = async (req, res) => {
+  try {
+    const { competence, localisation, statut } = req.query;
+
+    let query = `
+        SELECT 
+          offres.*,
+          institutions.nom AS institution_nom,
+          institutions.localisation AS institution_localisation,
+          institutions.secteur
+
+        FROM offres
+        JOIN institutions ON offres.institution_id = institutions.id
+        WHERE 1=1
+    `;
+
+    let params = [];
+    let index = 1;
+
+    if (competence) {
+        query += ` AND $${index} = ANY(offres.competences)`;
+        params.push(competence);
+        index++;
+    }
+
+    if (localisation) {
+        query += ` AND LOWER(offres.localisation) LIKE LOWER($${index})`;
+        params.push(`%${localisation}%`);
+        index++
+    }
+
+    if (statut) {
+        query += ` AND offres.statut = $${index}`;
+        params.push(statut);
+        index++;
+    } else {
+        // Par défaut on retourne uniquement les offres ouvertes
+        query += ` AND offres.statut = 'ouverte'`;
+    }
+
+    query += ` ORDER BY offres.created_at`;
+
+    const result = await pool.query(query, params);
+
+    res.status(200).json({
+        total: result.rows.length,
+        offres: result.rows
+    });
+  } catch (error) {
+    console.error('Erreur searchOffres :', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }  
+};
+
+
+module.exports = { createOffre, getAllOffres, getOffre, updateOffre, deleteOffre, searchOffres }

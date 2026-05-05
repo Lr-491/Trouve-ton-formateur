@@ -52,3 +52,30 @@ POST http://localhost:5000/api/candidatures
   "offre_id": 1,
   "message": "Je suis très intéressé par cette offre, j'ai 3 ans d'expérience en React et Node.js"
 }
+
+
+// Créer une formation (token formateur)
+POST http://localhost:5000/api/formations
+{
+  "titre": "Formation React.js de A à Z",
+  "description": "Apprenez React.js depuis les bases jusqu'aux concepts avancés",
+  "duree": 40,
+  "prix": 150000,
+  "niveau": "débutant"
+}
+
+// Lister toutes les formations (public)
+GET http://localhost:5000/api/formations
+
+
+// Rechercher formateurs par compétence
+GET http://localhost:5000/api/formateurs?competence=React
+
+// Rechercher formateurs par localisation
+GET http://localhost:5000/api/formateurs?localisation=Brazzaville
+
+// Rechercher offres
+GET http://localhost:5000/api/offres/search?competence=React
+
+// Rechercher avec plusieurs filtres
+GET http://localhost:5000/api/offres/search?competence=React&localisation=Brazzaville
