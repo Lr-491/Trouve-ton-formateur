@@ -1,16 +1,44 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Structure du projet React
 
-Currently, two official plugins are available:
+client/src/
+├── api/
+│   └── api.js          → configuration api
+├── context/
+│   └── AuthContext.jsx   → gestion utilisateur connecté
+├── pages/
+├── Home.jsx                    → page d'accueil publique
+├── auth/
+│   ├── Login.jsx
+│   └── Register.jsx
+├── formateur/
+│   ├── Dashboard.jsx
+│   └── Profil.jsx
+├── institution/
+│   ├── Dashboard.jsx
+│   └── Profil.jsx
+├── recherche/
+│   ├── RechercheFormateurs.jsx → chercher des formateurs
+│   └── RechercheOffres.jsx    → chercher des offres
+├── offres/
+│   └── OffreDetail.jsx        → détail d'une offre
+├── formations/
+│   └── FormationDetail.jsx    → détail d'une formation
+└── admin/
+|    └── Dashboard.jsx
+├── components/
+│   ├── Navbar.jsx
+│   └── ProtectedRoute.jsx
+├── App.jsx
+└── main.jsx
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+mkdir -p src/api src/context src/components src/pages/auth src/pages/formateur src/pages/institution src/pages/admin
+mkdir -p src/pages/recherche src/pages/offres src/pages/formations
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+touch  src/pages/auth/Login.jsx  src/pages/formateur/Dashboard.jsx src/pages/institution/Dashboard.jsx src/pages/admin/Dashbaord.jsx
+touch  src/pages/auth/Register.jsx  src/pages/formateur/Profil.jsx src/pages/institution/Profil.jsx src/pages/admin/Profil.jsx
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+touch src/pages/recherche/RechercheFormateurs.jsx src/pages/offres/OffreDeail.jsx src/pages/formations/FormationDetail.jsx
+touch src/pages/recherche/RechercheOffres.jsx 
