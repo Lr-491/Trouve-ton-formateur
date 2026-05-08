@@ -16,10 +16,9 @@ app.use('/api/institutions', require('./routes/institution.routes.js'));
 app.use('/api/offres', require('./routes/offre.routes'));
 app.use('/api/candidatures', require('./routes/candidature.routes'));
 app.use('/api/formations', require('./routes/formation.routes'));
-// app.use('/api/messages', require('./routes/message.routes'));
-// app.use('/api/evaluations', require('./routes/evaluation.routes'));
-// Les routes sont commentées pour l'instant, on les décommentera au fur et à mesure
-
+app.use('/api/messages', require('./routes/message.routes'));
+app.use('/api/evaluations', require('./routes/evaluation.routes'));
+app.use('/api/admin', require('./routes/admin.routes'));
 
 app.get('/', (req, res) =>{
     res.json({ message: 'API find training fonctionne !' });

@@ -79,3 +79,42 @@ GET http://localhost:5000/api/offres/search?competence=React
 
 // Rechercher avec plusieurs filtres
 GET http://localhost:5000/api/offres/search?competence=React&localisation=Brazzaville
+
+
+// Envoyer un message (token formateur → institution user_id = 2)
+POST http://localhost:5000/api/messages
+{
+  "destinataire_id": 2,
+  "contenu": "Bonjour, je suis intéressé par votre offre de formateur en développement web."
+}
+
+// Voir la conversation avec l'utilisateur 2
+GET http://localhost:5000/api/messages/2
+
+// Voir toutes ses conversations
+GET http://localhost:5000/api/messages/conversations
+
+// Noter un utilisateur (token formateur → noter l'institution user_id = 2)
+POST http://localhost:5000/api/evaluations
+{
+  "cible_id": 2,
+  "note": 4,
+  "commentaire": "Très bonne institution, communication claire et rapide."
+}
+
+// Voir les évaluations d'un utilisateur (public)
+GET http://localhost:5000/api/evaluations/2
+
+
+// Login admin
+POST http://localhost:5000/api/auth/login
+{
+  "email": "admin@findtraining.com",
+  "password": "password"
+}
+
+// Stats (token admin)
+GET http://localhost:5000/api/admin/stats
+
+// Tous les users (token admin)
+GET http://localhost:5000/api/admin/users
