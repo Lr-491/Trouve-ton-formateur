@@ -1,4 +1,4 @@
-AuthContext/**
+/**
  * Context d'authentification
  * Gère l'utilisateur connecté dans toute l'application
  */
