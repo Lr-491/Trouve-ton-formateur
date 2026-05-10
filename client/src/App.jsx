@@ -23,6 +23,8 @@ import DashboardAdmin from './pages/admin/Dashboard';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
+import Candidatures from './pages/formateur/Candidatures';
+import Formations from './pages/formateur/Forlations';
 
 const RoleRedirect = () => {
   const { user } = useAuth();
@@ -56,9 +58,20 @@ const App = () => {
               <DashboardFormateur />
             </ProtectedRoute>
           } />
-          <Route path="/profil/formateur/:id" element={
+          <Route path="/profil/formateur" element={
             <ProtectedRoute roles={['formateur']}>
               <ProfilFormateur />
+            </ProtectedRoute>
+          } />
+          <Route path="/formateur/candidatures" element={
+            <ProtectedRoute roles={['formateur']}>
+              <Candidatures />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/formateur/formations" element={
+            <ProtectedRoute roles={['formateur']}>
+              <Formations />
             </ProtectedRoute>
           } />
 
