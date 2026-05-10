@@ -25,6 +25,8 @@ import DashboardAdmin from './pages/admin/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Candidatures from './pages/formateur/Candidatures';
 import Formations from './pages/formateur/Forlations';
+import OffresDisponibles from './pages/formateur/OffresDisponibles';
+import Messages from './pages/formateur/Messages';
 
 const RoleRedirect = () => {
   const { user } = useAuth();
@@ -72,6 +74,18 @@ const App = () => {
           <Route path="/formateur/formations" element={
             <ProtectedRoute roles={['formateur']}>
               <Formations />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/formateur/messages" element={
+            <ProtectedRoute roles={['formateur']}>
+              <Messages />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/recherche/offres" element={
+            <ProtectedRoute roles={['formateur']}>
+              <OffresDisponibles />
             </ProtectedRoute>
           } />
 
