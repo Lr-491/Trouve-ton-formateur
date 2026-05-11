@@ -27,6 +27,9 @@ import Candidatures from './pages/formateur/Candidatures';
 import Formations from './pages/formateur/Forlations';
 import OffresDisponibles from './pages/formateur/OffresDisponibles';
 import Messages from './pages/formateur/Messages';
+import Offres from './pages/institution/Offres';
+import CandidaturesInstitution from './pages/institution/Candidatures';
+import MessagesInstitution from './pages/institution/Messages';
 
 const RoleRedirect = () => {
   const { user } = useAuth();
@@ -95,12 +98,33 @@ const App = () => {
               <DashboardInstitution />
             </ProtectedRoute>
           } />
-          <Route path="/profil/institution/:id" element={
+          <Route path="/profil/institution" element={
             <ProtectedRoute roles={['institution']}>
               <ProfilInstitution />
             </ProtectedRoute>
           } />
 
+          <Route path="/institution/offres" element={
+            <ProtectedRoute roles={['institution']}>
+              <Offres />
+            </ProtectedRoute>
+          } />
+          <Route path="/institution/candidatures" element={
+            <ProtectedRoute roles={['institution']}>
+              <CandidaturesInstitution />
+            </ProtectedRoute>
+          } />
+          <Route path="/institution/messages" element={
+            <ProtectedRoute roles={['institution']}>
+              <MessagesInstitution />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/recherche/formateurs" element={
+            <ProtectedRoute roles={['institution']}>
+              <RechercheFormateurs />
+            </ProtectedRoute>
+          } />
           {/* Routes admin */}
           <Route path="/dashboard/admin" element={
             <ProtectedRoute roles={['admin']}>
